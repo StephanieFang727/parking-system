@@ -4,28 +4,10 @@ import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 
-import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
-import {getUserParkInfo, addBreakInfo, updatePay} from '../../services/user'
+import {getUserParkInfo, updatePay} from '../../services/user'
 
-/**
- * 添加节点
- * @param fields
- */
-const handleAdd = async (fields: TableListItem) => {
-  const hide = message.loading('正在添加');
-  try {
-    await addBreakInfo({ ...fields });
-    hide();
-    message.success('添加成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('添加失败请重试！');
-    return false;
-  }
-};
 
 /**
  * 更新节点
@@ -34,7 +16,7 @@ const handleAdd = async (fields: TableListItem) => {
 const handleUpdate = async (fields: FormValueType) => {
   const hide = message.loading('正在更新');
   try {
-    await updatePay({user_id: fields.user_id, ispay: 1, record_id:fields.record_id});
+    await updatePay({user_id: fields.user_id, ispay: fields.isPay, record_id:fields.record_id});
     hide();
 
     message.success('缴费成功');
@@ -47,7 +29,6 @@ const handleUpdate = async (fields: FormValueType) => {
 };
 
 const TableList: React.FC<{}> = () => {
-  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef<ActionType>();
@@ -101,6 +82,7 @@ const TableList: React.FC<{}> = () => {
       render: (_, record) => (
         <>
           <a
+            disabled={record.isPay}
             onClick={() => {
               handleUpdateModalVisible(true);
               setStepFormValues(record);
@@ -121,27 +103,7 @@ const TableList: React.FC<{}> = () => {
         rowKey="bulletin_id"
         request={()=>getUserParkInfo(userId)}
         columns={columns}
-        toolBarRender={() =>  [
-          <Button type="primary" onClick={() => handleModalVisible(true)}>
-            <PlusOutlined /> 新建
-          </Button>
-        ]}
       />
-      <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
-        <ProTable<TableListItem, TableListItem>
-          onSubmit={async (value) => {
-            const success = await handleAdd(value);
-            if (success) {
-              handleModalVisible(false);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
-          }}
-          type="form"
-          columns={columns}
-        />
-      </CreateForm>
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
           onSubmit={async (value) => {

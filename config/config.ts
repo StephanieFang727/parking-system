@@ -67,12 +67,6 @@ export default defineConfig({
               icon: 'car',
               component: './ParkInfo',
             },
-            // {
-            //   path: '/setting',
-            //   name: 'setting',
-            //   icon: 'setting',
-            //   component: './SystemSettings',
-            // },
             {
               name: 'account.settings',
               icon: 'user',
