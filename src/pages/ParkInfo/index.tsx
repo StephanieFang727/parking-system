@@ -6,19 +6,36 @@ import { Switch, Button } from "antd";
 import { TableListItem } from './data.d';
 import { getParkInfo } from '../../services/user'
 import {connect} from "umi";
+import {ConnectState} from "@/models/connect";
 
-const TableList = ({dispatch}) => {
+const TableList = ({dispatch, user:{currentUser}}) => {
   const actionRef = useRef<ActionType>();
   const onClick = (record) => {
     if (dispatch) {
       dispatch({
-        type: 'user/updateBookStatus',
-        parking_id: record.parking_id,
-        book_action:1
+        type: 'user/bookParking',
+        payload: {
+          parking_id: record.parking_id,
+          user_id:localStorage.getItem('userid')
+        }
       });
     }
-    actionRef.current.reload();
+    location.reload();
   }
+
+  const oncancelClick = (record) => {
+    if (dispatch) {
+      dispatch({
+        type: 'user/cancelBooking',
+        payload: {
+          parking_id: record.parking_id,
+          user_id:localStorage.getItem('userid')
+        }
+      });
+    }
+    location.reload();
+  }
+
 
   const columns: ProColumns<TableListItem>[] = [
     {
@@ -45,17 +62,33 @@ const TableList = ({dispatch}) => {
       render: (item,record)=>
         item ? '已被预约' : '未被预约'
     },
-    {
-      title: '操作',
-      width: '10%',
-      render: (item,record)=>
-        <Button
-          disabled={record.isBooked}
-          onClick={()=>onClick(record)}
-        >预约
-        </Button>
-    },
+
   ];
+
+  const flag = currentUser.userid !== 2;
+  if (flag) {
+    columns.push(
+      {
+        title: '操作',
+        width: '10%',
+        render: (item,record)=>
+          currentUser.parking_id === record.parking_id ?
+            (
+              <Button
+            style={{marginRight: 4}}
+            onClick={() => oncancelClick(record)}
+          >取消预约
+          </Button>
+            ):(
+              <Button
+                style={{marginRight: 4}}
+                onClick={() => onClick(record)}
+              >预约
+              </Button>
+            )
+      },
+    )
+  }
   return (
     <PageHeaderWrapper>
       <ProTable<TableListItem>
@@ -69,4 +102,6 @@ const TableList = ({dispatch}) => {
   );
 };
 
-export default connect()(TableList);
+export default connect(({ user }: ConnectState) => ({
+ user,
+}))(TableList);;

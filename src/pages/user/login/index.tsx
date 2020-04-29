@@ -51,7 +51,7 @@ const Login: React.FC<LoginProps> = (props) => {
 
           <UserName
             name="username"
-            placeholder="用户名: user123"
+            placeholder="用户名"
             rules={[
               {
                 required: true,
@@ -71,6 +71,11 @@ const Login: React.FC<LoginProps> = (props) => {
           />
         </Tab>
         <Submit loading={submitting}>登录</Submit>
+        <div className={styles.other}>
+          <Link className={styles.register} to="/user/register">
+            注册账户
+          </Link>
+        </div>
       </LoginFrom>
     </div>
   );

@@ -40,6 +40,11 @@ export default defineConfig({
           path: '/user/login',
           component: './user/login',
         },
+        {
+          name: 'register',
+          path:'/user/register',
+          component: './user/register',
+        }
       ],
     },
     {
@@ -68,10 +73,25 @@ export default defineConfig({
               component: './ParkInfo',
             },
             {
+              path: '/userInfo',
+              name: 'userInfo',
+              icon: 'user',
+              component: './UserInfo',
+              authority: ['admin'],
+            },
+            {
+              path: '/setting',
+              name: 'fare.settings',
+              icon: 'setting',
+              component: './FareSettings',
+              authority: ['admin'],
+            },
+            {
               name: 'account.settings',
               icon: 'user',
               path: '/accountsettings',
               component: './AccountSettings',
+              authority: ['user'],
             },
             {
               component: './404',

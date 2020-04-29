@@ -43,6 +43,7 @@ export default {
   'menu.account': '个人页',
   'menu.account.center': '个人中心',
   'menu.account.settings': '个人设置',
+  'menu.fare.settings':'收费设置',
   'menu.account.trigger': '触发报错',
   'menu.account.logout': '退出登录',
   'menu.editor': '图形编辑器',
@@ -51,5 +52,6 @@ export default {
   'menu.editor.koni': '拓扑编辑器',
   'menu.userParkInfo': '停车信息',
   'menu.park.info': '车位信息',
+  'menu.userInfo': '用户信息',
   'menu.setting':'系统设置'
 };

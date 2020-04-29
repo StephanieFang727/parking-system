@@ -35,7 +35,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
   render(): React.ReactNode {
     const {
       currentUser = {
-        person_name: '',
+        username: '',
       },
       menu,
     } = this.props;
@@ -47,7 +47,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     return (
       <div>
         <span className={`${styles.action} ${styles.account}`}>
-          <span className={styles.name}>{currentUser.person_name}</span>
+          <span className={styles.name}>{currentUser.username}</span>
           <HeaderDropdown overlay={menuHeaderDropdown}>
             <LogoutOutlined />
           </HeaderDropdown>

@@ -43,6 +43,8 @@ const AccountSettings = ({currentUser, loading, dispatch}) => {
     if(!Object.keys(formInfo).length){
       return;
     }
+    delete formInfo.book_status;
+    delete formInfo.register_time;
     if (dispatch) {
       dispatch({
         type: 'user/updateUserInfo',
@@ -60,30 +62,37 @@ const AccountSettings = ({currentUser, loading, dispatch}) => {
       name="register"
       onFinish={onFinish}
       initialValues={{
-        person_name: currentUser.person_name,
-        age: currentUser.age,
-        sex: currentUser.sex,
+        username: currentUser.username,
+        carnumber: currentUser.carnumber,
       }}
       scrollToFirstError
     >
       <Form.Item
-        name="person_name"
+        name="username"
         label="用户名"
       >
         <Input />
       </Form.Item>
       <Form.Item
-        name="age"
-        label="年龄"
+        name="carnumber"
+        label="车牌号"
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        name="sex"
-        label="性别"
-      >
-        <Input />
-      </Form.Item>
+      {/*"register_time": "2020-04-25 00:00:00",*/}
+      {/*"book_status":*/}
+      {/*<Form.Item*/}
+      {/*  name="username"*/}
+      {/*  label="用户名"*/}
+      {/*>*/}
+      {/*  <Input />*/}
+      {/*</Form.Item>*/}
+      {/*<Form.Item*/}
+      {/*  name="carnumber"*/}
+      {/*  label="车牌号"*/}
+      {/*>*/}
+      {/*  <Input />*/}
+      {/*</Form.Item>*/}
       <Form.Item {...tailFormItemLayout}>
         <Button type="primary" htmlType="submit">
           更新

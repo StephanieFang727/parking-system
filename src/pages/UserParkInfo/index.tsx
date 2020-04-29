@@ -7,6 +7,8 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
 import {getUserParkInfo, updatePay} from '../../services/user'
+import {connect} from "umi";
+import {ConnectState} from "@/models/connect";
 
 
 /**
@@ -28,7 +30,7 @@ const handleUpdate = async (fields: FormValueType) => {
   }
 };
 
-const TableList: React.FC<{}> = () => {
+const TableList: React.FC<{}> = ({user:{currentUser}}) => {
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef<ActionType>();
@@ -75,25 +77,31 @@ const TableList: React.FC<{}> = () => {
       render:(item)=>
         item ? '已付款' : '未付款'
     },
-    {
-      title: '操作',
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) => (
-        <>
-          <a
-            disabled={record.isPay}
-            onClick={() => {
-              handleUpdateModalVisible(true);
-              setStepFormValues(record);
-            }}
-          >
-            缴费
-          </a>
-        </>
-      ),
-    },
   ];
+
+  const flag = currentUser.userid !== 2;
+  if (flag) {
+    columns.push(
+      {
+        title: '操作',
+        dataIndex: 'option',
+        valueType: 'option',
+        render: (_, record) => (
+          <>
+            <a
+              disabled={record.isPay}
+              onClick={() => {
+                handleUpdateModalVisible(true);
+                setStepFormValues(record);
+              }}
+            >
+              缴费
+            </a>
+          </>
+        ),
+      },
+    )
+  }
   return (
     <PageHeaderWrapper>
       <ProTable<TableListItem>
@@ -128,4 +136,6 @@ const TableList: React.FC<{}> = () => {
   );
 };
 
-export default TableList;
+export default connect(({ user }: ConnectState) => ({
+  user,
+}))(TableList);

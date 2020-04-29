@@ -1,7 +1,7 @@
 import { Effect, Reducer } from 'umi';
 
-import {queryCurrent, updateUserInfo, getThreshold,
-  updateThreshold,updateBookStatus} from '@/services/user';
+import {queryCurrent, updateUserInfo, getThreshold,deleteUser,
+  updateThreshold,bookParking,cancelBooking} from '@/services/user';
 import {notification} from "antd";
 import {Subscription} from "@@/plugin-dva/connect";
 
@@ -34,7 +34,9 @@ export interface UserModelType {
     fetchThreshold: Effect;
     updateThreshold: Effect;
     updateLightStatus:Effect;
-    updateBookStatus: Effect;
+    bookParking: Effect;
+    cancelBooking: Effect;
+    deleteUser: Effect;
   };
   reducers: {
     save: Reducer;
@@ -66,7 +68,7 @@ const UserModel: UserModelType = {
       const response = yield call(getThreshold);
       yield put({
         type: 'save',
-        threshold: response.data[0],
+        threshold: response,
       });
     },
     *updateUserInfo({payload},{call, put}){
@@ -100,18 +102,42 @@ const UserModel: UserModelType = {
         type: 'fetchThreshold',
       });
     },
-    *updateBookStatus(payload,{call,put}){
-      const response = yield call(updateBookStatus,payload);
-      if (response.status==='success'){
+    *bookParking({payload},{call,put}){
+      const response = yield call(bookParking,payload);
+      if (response.status=== 1){
         notification.success({
-          message: `预约成功！`
+          message: response.res,
+        })
+      }else {
+        notification.error({
+          message: response.res,
+        })
+      }
+    },
+    *cancelBooking({payload},{call,put}){
+      const response = yield call(cancelBooking,payload);
+      if (response.status=== 1 ){
+        notification.success({
+          message: response.res,
         })
       }else{
         notification.error({
-          message: `预约失败！`
+          message: response.res,
         })
       }
-    }
+    },
+    *deleteUser({payload},{call, put}){
+      const response = yield call(deleteUser, payload.userid);
+      if (response.status==='success'){
+        notification.success({
+          message: '删除成功!'
+        })
+      }else{
+        notification.error({
+          message: '删除失败!'
+        })
+      }
+    },
   },
 
   reducers: {
