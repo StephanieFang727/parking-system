@@ -102,7 +102,8 @@ const UserModel: UserModelType = {
         type: 'fetchThreshold',
       });
     },
-    *bookParking({payload},{call,put}){
+    *bookParking({payload},{select, call,put}){
+      const currentUser = yield select((state)=>state.user.currentUser )
       const response = yield call(bookParking,payload);
       if (response.status=== 1){
         notification.success({
@@ -113,8 +114,15 @@ const UserModel: UserModelType = {
           message: response.res,
         })
       }
+      yield put({
+        type:'fetchCurrent',
+        payload:{
+          userid: currentUser.userid,
+        }
+      })
     },
-    *cancelBooking({payload},{call,put}){
+    *cancelBooking({state, payload},{select,call,put}){
+      const currentUser = yield select((state)=>state.user.currentUser )
       const response = yield call(cancelBooking,payload);
       if (response.status=== 1 ){
         notification.success({
@@ -125,6 +133,12 @@ const UserModel: UserModelType = {
           message: response.res,
         })
       }
+      yield put({
+        type:'fetchCurrent',
+        payload:{
+          userid: currentUser.userid,
+        }
+      })
     },
     *deleteUser({payload},{call, put}){
       const response = yield call(deleteUser, payload.userid);
@@ -151,6 +165,7 @@ const UserModel: UserModelType = {
       return {
         ...state,
         currentUser: action.payload.data[0]|| {},
+        //parkId: action.payload.data[0].parking_id || '',
       };
     },
     changeNotifyCount(

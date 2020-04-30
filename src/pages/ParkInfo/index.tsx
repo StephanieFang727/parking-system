@@ -8,7 +8,7 @@ import { getParkInfo } from '../../services/user'
 import {connect} from "umi";
 import {ConnectState} from "@/models/connect";
 
-const TableList = ({dispatch, user:{currentUser}}) => {
+const TableList = ({dispatch, user:{currentUser, parkId}}) => {
   const actionRef = useRef<ActionType>();
   const onClick = (record) => {
     if (dispatch) {
@@ -20,7 +20,7 @@ const TableList = ({dispatch, user:{currentUser}}) => {
         }
       });
     }
-    location.reload();
+   actionRef.current.reload();
   }
 
   const oncancelClick = (record) => {
@@ -33,7 +33,7 @@ const TableList = ({dispatch, user:{currentUser}}) => {
         }
       });
     }
-    location.reload();
+    actionRef.current.reload();
   }
 
 
