@@ -90,7 +90,16 @@ const TableList = ({dispatch, user:{currentUser, parkId}}) => {
     )
   }
   return (
-    <PageHeaderWrapper>
+    <PageHeaderWrapper title={
+      <div>
+        车位信息
+        <Button style={{marginLeft: 6}}>
+        <a href='http://qq975368623.zicp.io/BaiduMapAPI/TEST.html'>
+          停车场分布
+        </a>
+        </Button>
+      </div>
+    }>
       <ProTable<TableListItem>
         headerTitle="车位信息"
         search={false}
